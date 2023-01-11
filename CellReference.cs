@@ -1,5 +1,8 @@
 namespace PrelimCode;
 
+/// <summary>
+/// A structure representing a 2D position on the grid.
+/// </summary>
 public struct CellReference
 {
     public int  CellX,

@@ -1,5 +1,8 @@
 namespace PrelimCode;
 
+/// <summary>
+/// Representation of a moving character in game. Currently only used for player.
+/// </summary>
 public class Character : Item
 {
     public Character(char icon, CellReference position) : base(icon, position)

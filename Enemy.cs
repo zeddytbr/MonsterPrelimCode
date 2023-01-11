@@ -1,5 +1,10 @@
 namespace PrelimCode;
  
+/// <summary>
+/// Representation of a sleeping enemy capable of moving towards a target
+/// position. Currently only used for the monster that engages the player after
+/// being awakened.
+/// </summary>
 public class Enemy : Item
 {
     public bool IsAwake { get; private set; }
@@ -11,7 +16,7 @@ public class Enemy : Item
 
     public override char GetGridIcon()
     {
-        return IsAwake ? 'M' : ' ';
+        return (IsAwake || GameSettings.AreMonstersAlwaysVisible) ? _icon : ' ';
     }
 
     public void MoveTowardsPlayer(CellReference playerPosition)      
