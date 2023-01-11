@@ -20,6 +20,7 @@ public class Item
     /// overriden to cause a different value to be drawn.
     /// </summary>
     public char Icon => _icon;
+    // ReSharper disable once InconsistentNaming
     protected readonly char _icon;
 
     protected Item(char icon, CellReference position)

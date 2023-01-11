@@ -43,15 +43,16 @@ public class Grid
         Console.WriteLine();
         
         // Compiler warning that originates with constants.
-#pragma warning disable CS0162
+        #pragma warning disable CS0162
         if (!GameSettings.IsPositionDebugEnabled) return;
-#pragma warning restore CS0162
+
         Console.WriteLine("DEBUG: ItemPositions");
         foreach (var item in _itemContentList)
         {
             Console.Write($"{item.Icon}({item.Position.CellX}, {item.Position.CellY}) ");
         }
         Console.WriteLine();
+        #pragma warning restore CS0162
     }
 
     /// <summary>

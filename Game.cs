@@ -39,53 +39,65 @@ public class Game
             } while (!CheckValidMove(chosenMove));
             if (chosenMove == 'M') break;   // Return to the menu.
             
+            // Move the player and refresh the screen.
             _player.MakeMove(chosenMove);
             _cavern.DrawToScreen();
-            
+
+            // Check to see if the player has found the flask and has won.
             bool flaskFound = _player.CheckIfSameCell(_flask.Position);
             if (flaskFound)
             { 
                 DisplayWonGameMessage();
-                break;
+                break;  // Break as we have won
             } 
             
             bool hasBeenEaten = _monster.CheckIfSameCell(_player.Position);
             // This selection structure checks to see if the player has 
-            // triggered one of the traps in the cavern
+            // triggered one of the traps in the cavern.
             if (!_monster.IsAwake 
                 && !flaskFound && !hasBeenEaten 
                 && (_trap1.CheckForActivation(_player.Position) 
                     || _trap2.CheckForActivation(_player.Position)))
-            { 
+            {
                 _monster.ToggleAwake();
-                DisplayTrapMessage();
                 _cavern.DrawToScreen();
-            } 
+                DisplayTrapMessage();
+            }
+            
+            // Monster move handling, moves 2 spaces for each player turn (OP??).
             if (_monster.IsAwake && !hasBeenEaten && !flaskFound)
             {
-                int count = 0;
-                do
+                Console.WriteLine("\nPress Enter key to continue");
+                Console.ReadLine();
+                for (int i = 0; i < 2; i++)
                 {
-                    var monsterOldPosition = _monster.Position;
+                    // The original project used this code to prevent the monster
+                    // from overwriting the flask on the grid by swapping their
+                    // positions as two items could not have the same position
+                    // on the grid. This is no longer an issue in the rewrite.
+                    //
+                    // var monsterOldPosition = _monster.Position;
+                    // if (_monster.CheckIfSameCell(_flask.Position))
+                    // {
+                    //     _flask.Position = monsterOldPosition;
+                    // }
+
                     _monster.MoveTowardsPlayer(_player.Position);
-                    if (_monster.CheckIfSameCell(_flask.Position))
-                    {
-                        _flask.Position = monsterOldPosition;
-                    } 
-                    hasBeenEaten = _monster.CheckIfSameCell(_player.Position);
-                    Console.WriteLine();
-                    Console.WriteLine("Press Enter key to continue");
-                    Console.ReadLine();
                     _cavern.DrawToScreen();
-                    count++;
-                } while (count != 2 && !hasBeenEaten);
+                    
+                    hasBeenEaten = _monster.CheckIfSameCell(_player.Position);
+                    if (hasBeenEaten) break;
+
+                    Console.WriteLine("\nPress Enter key to continue");
+                    Console.ReadLine();
+                }
             }
 
-            if (!hasBeenEaten) continue;
+            if (!hasBeenEaten) continue;    // Keep playing till game over or win.
             if (!_monster.IsAwake) _monster.ToggleAwake();
             _cavern.DrawToScreen();
             DisplayLostGameMessage();
-            break;
+            break;  // Break as we have lost
         }
     }
 
@@ -130,8 +142,7 @@ public class Game
 
     private static void DisplayTrapMessage()
     { 
-        Console.WriteLine("Oh no! You have set off a trap. Watch out, the monster is now awake!\nPress Enter key to continue");
-        Console.ReadLine();
+        Console.WriteLine("Oh no! You have set off a trap. Watch out, the monster is now awake!");
         Console.WriteLine();
     }
 
@@ -196,7 +207,7 @@ public class Game
         _flask = new Flask(
             'F',
             isTraining 
-                ? new CellReference { CellX = 3, CellY = 1 }
+                ? new CellReference { CellX = 4, CellY = 1 }
                 : _cavern.GetRandEmptyCell()
         );
         _cavern.AddItem(_flask);
